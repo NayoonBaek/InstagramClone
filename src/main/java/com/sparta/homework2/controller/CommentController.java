@@ -31,7 +31,7 @@ public class CommentController {
     }
 
     @PutMapping("/api/comment/{id}")
-    public ResponseEntity<?> updateMemo(@PathVariable Long id, @RequestBody CommentUpdateRequestDto requestDto) {
+    public ResponseEntity<?> updateMemo(@PathVariable Long id, @RequestBody CommentRequestDto requestDto) {
         try {
             return ResponseEntity.ok(commentService.updateComment(id, requestDto));
         } catch (NullPointerException e) {

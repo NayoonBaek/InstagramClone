@@ -46,7 +46,7 @@ public class CommentService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
 
-        Comment comment = new Comment(member.getUsername(), requestDto.getComment(), article);
+        Comment comment = new Comment(member.getNickname(), member.getUsername(), requestDto.getComment(), article);
 
         commentRepository.save(comment);
 
@@ -54,7 +54,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment updateComment(Long id, CommentUpdateRequestDto requestDto) {
+    public Comment updateComment(Long id, CommentRequestDto requestDto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -64,7 +64,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 댓글이 존재하지 않습니다."));
 
-        if(!member.getUsername().equals(comment.getName())) {
+        if(!member.getUsername().equals(comment.getUsername())) {
             throw new RuntimeException("작성자만 수정할 수 있습니다.");
         }
 
@@ -84,7 +84,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 댓글이 존재하지 않습니다."));
 
-        if(!member.getUsername().equals(comment.getName())) {
+        if(!member.getUsername().equals(comment.getUsername())) {
             throw new RuntimeException("작성자만 삭제할 수 있습니다.");
         }
 

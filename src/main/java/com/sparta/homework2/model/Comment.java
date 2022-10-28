@@ -20,7 +20,10 @@ public class Comment extends Timestamped {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String nickname;
+
+    @Column(nullable = false)
+    private String username;
 
     @Column(nullable = false)
     private String comment;
@@ -29,13 +32,14 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
-    public Comment(String name, String comment, Article article) {
-        this.name = name;
+    public Comment(String nickname, String username, String comment, Article article) {
+        this.nickname = nickname;
+        this.username = username;
         this.comment = comment;
         this.article = article;
     }
 
     public CommentResponseDto toDto() {
-        return new CommentResponseDto(this.id, this.name, this.comment);
+        return new CommentResponseDto(this.id, this.nickname, this.comment);
     }
 }

@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CommentResponseDto {
     private Long id;
-    private String name;
+    private String nickname;
     private String comment;
 
-    public CommentResponseDto(Long id, String name, String comment) {
+    public CommentResponseDto(Long id, String nickname, String comment) {
         this.id = id;
-        this.name = name;
+        this.nickname = nickname;
         this.comment = comment;
     }
 }

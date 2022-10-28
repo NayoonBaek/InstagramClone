@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    // h2 database 테스트가 원활하도록 관련 API 들은 전부 무시
+    // H2 Database 테스트가 원활하도록 관련 API 들은 전부 무시
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()

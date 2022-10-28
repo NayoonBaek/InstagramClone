@@ -134,16 +134,8 @@ public class ArticleService {
            throw new RuntimeException("작성자만 수정할 수 있습니다.");
         }
 
-        String image = article.getImage();
-
-        // 이미지 불러오기
-        String imgPath = amazonS3Client.getUrl(bucket, image).toString();
-
-        // 변수에 이미지 경로 저장
-        String s3FileName = imgPath;
-
         // 객체 수정
-        article.update(member.getUsername(), titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto, s3FileName);
+        article.update(member.getUsername(), titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto);
 
         articleRepository.save(article);
 

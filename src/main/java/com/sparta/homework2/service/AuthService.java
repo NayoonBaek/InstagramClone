@@ -79,6 +79,7 @@ public class AuthService {
     public void logout() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
+        System.out.println(authId);
 
         Member member = memberRepository.findById(authId)
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));

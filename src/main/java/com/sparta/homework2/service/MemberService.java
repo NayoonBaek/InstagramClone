@@ -66,7 +66,7 @@ public class MemberService {
         Member member = memberRepository.findById(authId)
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
-        List<Comment> comments = commentRepository.findAllByName(member.getUsername())
+        List<Comment> comments = commentRepository.findAllByUsername(member.getUsername())
                 .orElseThrow(() -> new RuntimeException("댓글이 없습니다."));
 
         List<CommentResponseDto> commentDto = comments.stream()

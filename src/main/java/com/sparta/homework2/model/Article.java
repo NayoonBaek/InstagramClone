@@ -71,13 +71,12 @@ public class Article extends Timestamped {
     }
 
     public void update(String username, TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
-            , SingerRequestDto singerRequestDto, String s3FileName) {
+            , SingerRequestDto singerRequestDto) {
         this.title = titleRequestDto.getTitle();
         this.author = username;
         this.content = contentRequestDto.getContent();
         this.singer = singerRequestDto.getSinger();
         this.song = songRequestDto.getSong();
-        this.image = s3FileName;
     }
 
     public ArticleResponseDto toDto() {
