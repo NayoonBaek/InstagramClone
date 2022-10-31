@@ -1,22 +1,22 @@
 spring:
-  h2:
-    console:
-      enabled: true
+#  h2:
+#    console:
+#      enabled: true
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
         show_sql: true
 
   datasource:
-    url: jdbc:h2:mem:userdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://springboot-database.czpadvo58x83.ap-northeast-2.rds.amazonaws.com:3306/myselectshop
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: admin
+    password: qwer1234
 
   servlet:
     multipart:
@@ -33,20 +33,20 @@ jwt:
 cloud:
   aws:
     credentials:
-      accessKey: AKIA6HKUMRU7K4M355AM # AWS IAM AccessKey 적기
-      secretKey: 5NWVLPFjlAev409qO2iOPYpQopy2izPnFEABr1Xe # AWS IAM SecretKey 적기
+      accessKey: AKIARC436G6RAZUTUY5M # AWS IAM AccessKey 적기
+      secretKey: FEBz7jX6Z2qAd6hoX6u9SxJbGiZw5dAised0DK9K # AWS IAM SecretKey 적기
     s3:
-      bucket: soonhanimage # ex) marryting-gyunny
+      bucket: miniproject-spring # ex) marryting-gyunny
     region:
       static: ap-northeast-2
     stack:
       auto: false
 
 server:
-  port: 443
+  port: 8080
   ssl:
     enabled: true
     key-store: classpath:keystore.p12
     key-store-type: PKCS12
-    key-store-password: 719412
+    key-store-password: qwer1234
 

@@ -13,10 +13,11 @@ import java.sql.SQLException;
 
 @RequiredArgsConstructor
 @RestController // JSON으로 데이터를 주고받음을 선언합니다.
+@RequestMapping("/api")
 public class CommentController {
     private final CommentService commentService;
 
-    @GetMapping("/api/comments/{id}")
+    @GetMapping("/comments/{id}")
     public ResponseEntity<?> getComments(@PathVariable Long id) throws SQLException {
         try {
             return ResponseEntity.ok(commentService.getComments(id));
@@ -25,12 +26,12 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/api/comment/{id}")
+    @PostMapping("/comment/{id}")
     public ResponseEntity<?> createArticle(@PathVariable Long id, @RequestBody CommentRequestDto requestDto) throws SQLException {
         return ResponseEntity.ok(commentService.createComment(id, requestDto));
     }
 
-    @PutMapping("/api/comment/{id}")
+    @PutMapping("/comment/{id}")
     public ResponseEntity<?> updateMemo(@PathVariable Long id, @RequestBody CommentRequestDto requestDto) {
         try {
             return ResponseEntity.ok(commentService.updateComment(id, requestDto));
@@ -41,7 +42,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("/api/comment/{id}")
+    @DeleteMapping("/comment/{id}")
     public ResponseEntity<?> deleteMemo(@PathVariable Long id) {
         try {
             commentService.deleteComment(id);
