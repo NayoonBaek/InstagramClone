@@ -36,12 +36,10 @@ public class ArticleService {
     private final AmazonS3Client amazonS3Client;
     private final LikeRepository likeRepository;
 
-
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     public List<ArticleResponseDto> getArticles() throws SQLException {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
