@@ -3,17 +3,13 @@ package com.sparta.homework2.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.sparta.homework2.dto.ArticlePasswordRequestDto;
-import com.sparta.homework2.dto.ArticleRequestDto;
 import com.sparta.homework2.dto.ArticleResponseDto;
 import com.sparta.homework2.dto.request.ContentRequestDto;
-import com.sparta.homework2.dto.request.SingerRequestDto;
-import com.sparta.homework2.dto.request.SongRequestDto;
-import com.sparta.homework2.dto.request.TitleRequestDto;
-import com.sparta.homework2.jwt.TokenProvider;
 import com.sparta.homework2.model.Article;
+import com.sparta.homework2.model.Like;
 import com.sparta.homework2.model.Member;
 import com.sparta.homework2.repository.ArticleRepository;
+import com.sparta.homework2.repository.LikeRepository;
 import com.sparta.homework2.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +22,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,14 +34,30 @@ public class ArticleService {
     private final MemberRepository memberRepository;
     private final AmazonS3 amazonS3;
     private final AmazonS3Client amazonS3Client;
+    private final LikeRepository likeRepository;
 
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     public List<ArticleResponseDto> getArticles() throws SQLException {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long authId = Long.parseLong(auth.getName());
+
+        Member member = memberRepository.findById(authId)
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+
         List<ArticleResponseDto> articlesDto = articleRepository.findAll()
+
                 .stream().map((article) -> {
+                    ArticleResponseDto articleDto = article.toDto();
+                    Optional<Like> likes = likeRepository.findByMemberAndArticle(member, article);
+                    if (likes.isPresent()){
+                        articleDto.setLike(true);
+                    }else {
+                        articleDto.setLike(false);
+                    }
                     String image = article.getImage();
                     String imgPath = amazonS3Client.getUrl(bucket, image).toString();
                     article.setImage(imgPath);
@@ -72,8 +85,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article createArticle(TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
-            , SingerRequestDto singerRequestDto, MultipartFile multipartFile) throws IOException {
+    public Article createArticle(ContentRequestDto contentRequestDto, MultipartFile multipartFile) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -93,7 +105,7 @@ public class ArticleService {
         }
 
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
-        Article article = new Article(member.getUsername(), titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto, s3FileName);
+        Article article = new Article(member.getUsername(), contentRequestDto, s3FileName);
 
         articleRepository.save(article);
 
@@ -119,8 +131,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article updateArticle(Long id, TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
-            , SingerRequestDto singerRequestDto) throws IOException {
+    public Article updateArticle(Long id,  ContentRequestDto contentRequestDto) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -135,7 +146,7 @@ public class ArticleService {
         }
 
         // 객체 수정
-        article.update(member.getUsername(), titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto);
+        article.update(member.getUsername(), contentRequestDto);
 
         articleRepository.save(article);
 

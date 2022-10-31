@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.transaction.Transactional;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +29,7 @@ public class LikeService {
 
 
     @Transactional
-    public LikeResponseDto createLike(Long id) throws SQLException {
+    public boolean createLike(Long id) throws SQLException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
@@ -39,18 +40,16 @@ public class LikeService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
 
-        if (likeRepository.existsByMemberIdAndArticleId(member.getId(),article.getId())) {
-            throw new RuntimeException("좋아요는 한번만 가능합니다.");
-        }
-        Like like = new Like(member, article);
-
-        likeRepository.save(like);
-
-        return new LikeResponseDto(member.getUsername(), id);
+        Optional<Like> likes = likeRepository.findByMemberAndArticle(member, article);
+        if (!(likes.isPresent())){
+            Like like = new Like(member, article);
+            likeRepository.save(like);
+        }return true;
     }
 
-    @org.springframework.transaction.annotation.Transactional
-    public List<ArticleResponseDto> getArticleWithLikes(Long id) throws SQLException {
+    @Transactional
+    public boolean deleteLike(Long id) throws SQLException {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -60,11 +59,24 @@ public class LikeService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
 
-        List<Like> likes = likeRepository.findAllByMemberId(id);
-
-        List<ArticleResponseDto> articles = likes.stream()
-                .map(like -> like.getArticle().toDto()).collect(Collectors.toList());
-
-        return articles;
+        Optional<Like> likes = likeRepository.findByMemberAndArticle(member, article);
+        if (likes.isPresent()) {
+            likeRepository.delete(likes.get());
+        }return false;
     }
+
+//    @org.springframework.transaction.annotation.Transactional
+//    public List<ArticleResponseDto> getArticleWithLikes(Long id) throws SQLException {
+//
+//
+//        Article article = articleRepository.findById(id)
+//                .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
+//
+//        List<Like> likes = likeRepository.findAllByArticleId(article.getId());
+//
+//        List<ArticleResponseDto> articles = likes.stream()
+//                .map(like -> like.getArticle().toDto()).collect(Collectors.toList());
+//
+//        return articles;
+//    }
 }

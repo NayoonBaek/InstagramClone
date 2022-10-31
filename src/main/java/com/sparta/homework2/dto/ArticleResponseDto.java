@@ -13,24 +13,20 @@ import java.util.List;
 @Setter
 public class ArticleResponseDto {
     private Long id;
-    private String title;
     private String author;
     private String content;
-    private String singer;
-    private String song;
     private String image;
     private List<Comment> comments;
     private int likesSize;
+    private boolean isLike;
 
-    public ArticleResponseDto(Long id, String title, String author, String content,
-                              int likesSize, String image, String singer, String song) {
+    public ArticleResponseDto(Long id, String author, String content,
+                              int likesSize, String image) {
         this.id = id;
-        this.title = title;
         this.author = author;
         this.content = content;
         this.likesSize = likesSize;
         this.image = image;
-        this.singer = singer;
-        this.song = song;
+
     }
 }
