@@ -1,7 +1,11 @@
 package com.sparta.homework2.controller;
 
+import com.sparta.homework2.dto.ArticleRequestDto;
 import com.sparta.homework2.dto.request.ContentRequestDto;
 import com.sparta.homework2.service.ArticleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +23,13 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
+    @Operation(summary = "test hello", description = "hello api example")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
     @GetMapping("/articles")
     public ResponseEntity<?> getArticles() throws SQLException {
         return ResponseEntity.ok(articleService.getArticles());

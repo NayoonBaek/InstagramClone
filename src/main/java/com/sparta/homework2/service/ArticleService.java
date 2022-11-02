@@ -3,16 +3,19 @@ package com.sparta.homework2.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.sparta.homework2.dto.ArticleRequestDto;
 import com.sparta.homework2.dto.ArticleResponseDto;
 import com.sparta.homework2.dto.request.ContentRequestDto;
 import com.sparta.homework2.model.Article;
 import com.sparta.homework2.model.Like;
 import com.sparta.homework2.model.Member;
+import com.sparta.homework2.model.Time;
 import com.sparta.homework2.repository.ArticleRepository;
 import com.sparta.homework2.repository.LikeRepository;
 import com.sparta.homework2.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,9 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -35,8 +38,6 @@ public class ArticleService {
     private final AmazonS3 amazonS3;
     private final AmazonS3Client amazonS3Client;
     private final LikeRepository likeRepository;
-
-
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
@@ -103,14 +104,16 @@ public class ArticleService {
             amazonS3.putObject(bucket,s3FileName,multipartFile.getInputStream(),objMeta);
             // image = amazonS3.getUrl(bucket,s3FileName).toString();
         }
-
+        Date date = new Date();
+        String time = Time.calculateTime(date);
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
-        Article article = new Article(member.getUsername(), contentRequestDto, s3FileName);
+        Article article = new Article(member.getUsername(), contentRequestDto, s3FileName, time);
 
         articleRepository.save(article);
 
         return article;
     }
+
 
     public Long deleteArticle(Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
