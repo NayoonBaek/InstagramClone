@@ -1,7 +1,5 @@
 package com.sparta.homework2.service;
 
-import com.sparta.homework2.dto.ArticleResponseDto;
-import com.sparta.homework2.dto.LikeResponseDto;
 import com.sparta.homework2.model.Article;
 import com.sparta.homework2.model.Like;
 import com.sparta.homework2.model.Member;
@@ -12,13 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +23,7 @@ public class LikeService {
 
 
     @Transactional
-    public boolean createLike(Long id) throws SQLException {
+    public boolean createLike(Long id) throws RuntimeException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
@@ -48,7 +42,7 @@ public class LikeService {
     }
 
     @Transactional
-    public boolean deleteLike(Long id) throws SQLException {
+    public boolean deleteLike(Long id) throws RuntimeException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());

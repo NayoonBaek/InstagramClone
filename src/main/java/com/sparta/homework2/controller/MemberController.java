@@ -2,11 +2,8 @@ package com.sparta.homework2.controller;
 
 import com.sparta.homework2.dto.ArticleResponseDto;
 import com.sparta.homework2.dto.CommentResponseDto;
-import com.sparta.homework2.dto.MemberResponseDto;
-import com.sparta.homework2.model.Article;
 import com.sparta.homework2.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
