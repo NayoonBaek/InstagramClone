@@ -46,19 +46,29 @@ public class ArticleService {
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
         List<ArticleResponseDto> articlesDto = articleRepository.findAll()
-
                 .stream().map((article) -> {
                     ArticleResponseDto articleDto = article.toDto();
+
+                    // DTO에 좋아요 여부 설정
                     Optional<Like> likes = likeRepository.findByMemberAndArticle(member, article);
                     if (likes.isPresent()){
                         articleDto.setLike(true);
                     }else {
                         articleDto.setLike(false);
                     }
+
+                    // DTO에 이미지 저장
                     String image = article.getImage();
                     String imgPath = amazonS3Client.getUrl(bucket, image).toString();
-                    article.setImage(imgPath);
-                    return article.toDto();
+                    articleDto.setImage(imgPath);
+
+                    // 좋아요 개수 계산 & 저장
+                    List<Like> likeList = likeRepository.findAllByArticleId(article.getId());
+                    int likeCount = likeList.size();
+                    articleDto.setLikesSize(likeCount);
+
+                    // DTO 반환
+                    return articleDto;
                 }).collect(Collectors.toList());
 
         return articlesDto;
@@ -73,10 +83,17 @@ public class ArticleService {
 
         // 객체에 이미지 경로 저장
         article.setImage(imgPath);
+
+        // 좋아요 개수 계산
+        List<Like> likeList = likeRepository.findAllByArticleId(id);
+        int likeCount = likeList.size();
         
         // 객체를 DTO로 변환
         // DTO에 이미지 경로 저장
         ArticleResponseDto articleDto = article.toDto();
+        
+        // 좋아요 개수 저장
+        articleDto.setLikesSize(likeCount);
 
         return articleDto;
     }
@@ -109,6 +126,7 @@ public class ArticleService {
         return article;
     }
 
+    @Transactional
     public Long deleteArticle(Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());

@@ -38,7 +38,8 @@ public class LikeService {
         if (!(likes.isPresent())){
             Like like = new Like(member, article);
             likeRepository.save(like);
-        }return true;
+        }
+        return true;
     }
 
     @Transactional
@@ -56,7 +57,8 @@ public class LikeService {
         Optional<Like> likes = likeRepository.findByMemberAndArticle(member, article);
         if (likes.isPresent()) {
             likeRepository.delete(likes.get());
-        }return false;
+        }
+        return false;
     }
 
 //    @org.springframework.transaction.annotation.Transactional
