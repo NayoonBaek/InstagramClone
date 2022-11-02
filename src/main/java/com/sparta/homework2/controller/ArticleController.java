@@ -47,9 +47,9 @@ public class ArticleController {
         }
     }
 
-    @PutMapping(value = "/article/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value = "/article/{id}")
     public ResponseEntity<?> updateArticle(@PathVariable Long id,
-                                           @RequestParam (value = "content") ContentRequestDto contentRequestDto
+                                           @RequestBody ContentRequestDto contentRequestDto
                                            ) throws IOException {
         try {
             return ResponseEntity.ok(articleService.updateArticle(id, contentRequestDto));
