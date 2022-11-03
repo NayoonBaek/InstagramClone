@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController // JSON으로 데이터를 주고받음을 선언합니다.
@@ -31,12 +29,12 @@ public class ArticleController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
     })
     @GetMapping("/articles")
-    public ResponseEntity<?> getArticles() throws SQLException {
+    public ResponseEntity<?> getArticles() throws RuntimeException {
         return ResponseEntity.ok(articleService.getArticles());
     }
 
     @GetMapping("/article/{id}")
-    public ResponseEntity<?> getArticle(@PathVariable Long id) throws SQLException {
+    public ResponseEntity<?> getArticle(@PathVariable Long id) throws RuntimeException {
         return ResponseEntity.ok(articleService.getArticle(id));
     }
 
@@ -58,9 +56,9 @@ public class ArticleController {
         }
     }
 
-    @PutMapping(value = "/article/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value = "/article/{id}")
     public ResponseEntity<?> updateArticle(@PathVariable Long id,
-                                           @RequestParam (value = "content") ContentRequestDto contentRequestDto
+                                           @RequestBody ContentRequestDto contentRequestDto
                                            ) throws IOException {
         try {
             return ResponseEntity.ok(articleService.updateArticle(id, contentRequestDto));

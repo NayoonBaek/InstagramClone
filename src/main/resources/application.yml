@@ -16,10 +16,10 @@ spring:
         show_sql: true
 
   datasource:
-    url: jdbc:mysql://springboot-database.czpadvo58x83.ap-northeast-2.rds.amazonaws.com:3306/myselectshop
+    url: jdbc:mysql://springboot-database.cuembkmhoi0a.ap-northeast-2.rds.amazonaws.com:3306/myselectshop
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: admin
-    password: qwer1234
+    password: iy719412
 
   servlet:
     multipart:
@@ -45,10 +45,11 @@ cloud:
     stack:
       auto: false
 
-#server:
-#  ssl:
-#    enabled: true
-#    key-store: classpath:keystore.p12
-#    key-store-type: PKCS12
-#    key-store-password: qwer1234
+server:
+  port: 8000
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password: 719412
 
