@@ -124,10 +124,9 @@ public class ArticleService {
             amazonS3.putObject(bucket,s3FileName,multipartFile.getInputStream(),objMeta);
             // image = amazonS3.getUrl(bucket,s3FileName).toString();
         }
-        Date date = new Date();
-        String time = Time.calculateTime(date);
+
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
-        Article article = new Article(member.getUsername(), contentRequestDto, s3FileName, time);
+        Article article = new Article(member.getUsername(), contentRequestDto, s3FileName);
 
         articleRepository.save(article);
 

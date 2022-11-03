@@ -34,12 +34,6 @@ public class Article extends Timestamped {
     private String image;
 
     @JsonIgnore
-    private Date time = new Date();
-
-    @JsonIgnore
-    private String date;
-
-    @JsonIgnore
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
@@ -52,19 +46,16 @@ public class Article extends Timestamped {
         this.content = content;
     }
 
-    public Article(String username, ContentRequestDto contentRequestDto, String s3FileName, String time) {
+    public Article(String username, ContentRequestDto contentRequestDto, String s3FileName) {
         this.author = username;
         this.content = contentRequestDto.getContent();
         this.image = s3FileName;
-        this.date = time;
     }
     public Article(String username, String content, String imgPath) {
         this.author = username;
         this.content = content;
         this.image = imgPath;
     }
-
-
 
     public void update(String username, ContentRequestDto contentRequestDto) {
         this.author = username;
@@ -73,6 +64,6 @@ public class Article extends Timestamped {
 
     public ArticleResponseDto toDto() {
         int likseSize = this.likes.size();
-        return new ArticleResponseDto(this.id, this.author, this.content, likseSize, this.image, this.time);
+        return new ArticleResponseDto(this.id, this.author, this.content, likseSize, this.image);
     }
 }

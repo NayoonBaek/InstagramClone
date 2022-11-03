@@ -23,16 +23,12 @@ public class ArticleResponseDto {
 
     private boolean isLike;
 
-    private String date;
-
-
     public ArticleResponseDto(Long id, String author, String content,
-                              int likesSize, String image, Date time) {
+                              int likesSize, String image) {
         this.id = id;
         this.author = author;
         this.content = content;
         this.likesSize = likesSize;
         this.image = image;
-        this.date = Time.calculateTime(time);
     }
 }
