@@ -30,7 +30,6 @@ public class LikeService {
 
     @Transactional
     public boolean createLike(Long id) throws SQLException {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -41,16 +40,17 @@ public class LikeService {
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
 
         Optional<Like> likes = likeRepository.findByMemberAndArticle(member, article);
-        if (!(likes.isPresent())){
+
+        if (!likes.isPresent()) {
             Like like = new Like(member, article);
             likeRepository.save(like);
         }
+
         return true;
     }
 
     @Transactional
     public boolean deleteLike(Long id) throws SQLException {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -64,6 +64,7 @@ public class LikeService {
         if (likes.isPresent()) {
             likeRepository.delete(likes.get());
         }
+
         return false;
     }
 
