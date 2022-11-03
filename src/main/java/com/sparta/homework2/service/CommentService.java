@@ -1,7 +1,7 @@
 package com.sparta.homework2.service;
 
-import com.sparta.homework2.dto.*;
-import com.sparta.homework2.jwt.TokenProvider;
+import com.sparta.homework2.dto.CommentRequestDto;
+import com.sparta.homework2.dto.CommentResponseDto;
 import com.sparta.homework2.model.Article;
 import com.sparta.homework2.model.Comment;
 import com.sparta.homework2.model.Member;
@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +24,7 @@ public class CommentService {
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
 
-    public List<CommentResponseDto> getComments(Long id) throws SQLException {
+    public List<CommentResponseDto> getComments(Long id) throws RuntimeException {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
 
@@ -36,7 +35,7 @@ public class CommentService {
         return comments;
     }
 
-    public Comment createComment(Long id, CommentRequestDto requestDto) throws SQLException {
+    public Comment createComment(Long id, CommentRequestDto requestDto) throws RuntimeException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 

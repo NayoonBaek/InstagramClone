@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +38,7 @@ public class ArticleService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public List<ArticleResponseDto> getArticles() throws SQLException {
+    public List<ArticleResponseDto> getArticles() throws RuntimeException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -75,7 +74,7 @@ public class ArticleService {
         return articlesDto;
     }
 
-    public ArticleResponseDto getArticle(Long id) throws SQLException {
+    public ArticleResponseDto getArticle(Long id) throws RuntimeException {
         Article article = articleRepository.findById(id).orElse(null);
         String image = article.getImage();
 

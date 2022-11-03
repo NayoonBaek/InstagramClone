@@ -1,15 +1,11 @@
 package com.sparta.homework2.controller;
 
 import com.sparta.homework2.dto.CommentRequestDto;
-import com.sparta.homework2.dto.CommentUpdateRequestDto;
 import com.sparta.homework2.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.ServletRequest;
-import java.sql.SQLException;
 
 @RequiredArgsConstructor
 @RestController // JSON으로 데이터를 주고받음을 선언합니다.
@@ -18,7 +14,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/comments/{id}")
-    public ResponseEntity<?> getComments(@PathVariable Long id) throws SQLException {
+    public ResponseEntity<?> getComments(@PathVariable Long id) throws RuntimeException {
         try {
             return ResponseEntity.ok(commentService.getComments(id));
         } catch (NullPointerException e) {
@@ -27,7 +23,7 @@ public class CommentController {
     }
 
     @PostMapping("/comment/{id}")
-    public ResponseEntity<?> createArticle(@PathVariable Long id, @RequestBody CommentRequestDto requestDto) throws SQLException {
+    public ResponseEntity<?> createArticle(@PathVariable Long id, @RequestBody CommentRequestDto requestDto) throws RuntimeException {
         return ResponseEntity.ok(commentService.createComment(id, requestDto));
     }
 

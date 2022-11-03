@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController // JSON으로 데이터를 주고받음을 선언합니다.
@@ -20,12 +18,12 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping("/articles")
-    public ResponseEntity<?> getArticles() throws SQLException {
+    public ResponseEntity<?> getArticles() throws RuntimeException {
         return ResponseEntity.ok(articleService.getArticles());
     }
 
     @GetMapping("/article/{id}")
-    public ResponseEntity<?> getArticle(@PathVariable Long id) throws SQLException {
+    public ResponseEntity<?> getArticle(@PathVariable Long id) throws RuntimeException {
         return ResponseEntity.ok(articleService.getArticle(id));
     }
 
