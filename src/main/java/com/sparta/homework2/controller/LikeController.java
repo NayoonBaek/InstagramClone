@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/like/{id}")
+@RequestMapping("/api")
 public class LikeController {
     private final LikeService likeservice;
 
@@ -16,10 +16,12 @@ public class LikeController {
     public ResponseEntity<?> createLike(@PathVariable Long id) throws RuntimeException {
         return ResponseEntity.ok(likeservice.createLike(id));
     }
+
     @DeleteMapping
     public ResponseEntity<?> deleteLike(@PathVariable Long id) throws RuntimeException {
         return ResponseEntity.ok(likeservice.deleteLike(id));
     }
+
 //    @GetMapping("/api/like/{memberId}")
 //    public ResponseEntity<?> getArticleWithLikes(@PathVariable Long memberId)
 //            throws SQLException {

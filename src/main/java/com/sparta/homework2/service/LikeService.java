@@ -24,7 +24,6 @@ public class LikeService {
 
     @Transactional
     public boolean createLike(Long id) throws RuntimeException {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -35,16 +34,17 @@ public class LikeService {
                 .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
 
         Optional<Like> likes = likeRepository.findByMemberAndArticle(member, article);
-        if (!(likes.isPresent())){
+
+        if (!likes.isPresent()) {
             Like like = new Like(member, article);
             likeRepository.save(like);
         }
+
         return true;
     }
 
     @Transactional
     public boolean deleteLike(Long id) throws RuntimeException {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -58,21 +58,7 @@ public class LikeService {
         if (likes.isPresent()) {
             likeRepository.delete(likes.get());
         }
+
         return false;
     }
-
-//    @org.springframework.transaction.annotation.Transactional
-//    public List<ArticleResponseDto> getArticleWithLikes(Long id) throws SQLException {
-//
-//
-//        Article article = articleRepository.findById(id)
-//                .orElseThrow(() -> new NullPointerException("해당 글이 없습니다."));
-//
-//        List<Like> likes = likeRepository.findAllByArticleId(article.getId());
-//
-//        List<ArticleResponseDto> articles = likes.stream()
-//                .map(like -> like.getArticle().toDto()).collect(Collectors.toList());
-//
-//        return articles;
-//    }
 }
